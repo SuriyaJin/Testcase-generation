@@ -2,6 +2,7 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%! @SuppressWarnings("unchecked") %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,10 +68,10 @@
 <body>
 
 	<%
-            List<TestCase> testCaseList = (List<TestCase>) request.getAttribute("testCaseList");
+            List<TestCase> testCaseList = (List<TestCase>) request.getSession().getAttribute("testCaseList");
         %>
 	<%if(testCaseList.size()==0) {%>
-	<h2>Atleast add one case</h2>
+	<h2>At least add one case</h2>
 	<%}else{%>
 	<div class="container">
 		<div class="row">
@@ -101,8 +102,8 @@
                                         for (TestCase t : testCaseList) {
                                     %>
 								<tr>
-									<td align="center"><a id = "<%=t.getId() %>" onclick="edit(this)" class="btn btn-default"><em
-											class="fa fa-pencil"></em></a> <a onclick="deleteCase()" class="btn btn-danger"><em
+									<td align="center"><a id = "<%=t.getId() %>" onclick="edit(<%=t.getId()%>)" class="btn btn-default"><em
+											class="fa fa-pencil"></em></a> <a onclick="deleteCase(<%=t.getId() %>)" class="btn btn-danger"><em
 											class="fa fa-trash"></em></a></td>
 									<td><%=t.getId()%></td>
 									<td><%=t.getSelector()%></td>
@@ -143,7 +144,7 @@
 			</div>
 		</div>
 	</div>
-	<button class="btn btn-success" style="align: right;">Finish</button>
+	<button class="btn btn-success" style="align: right;" onclick="generateTestCase()">Finish</button>
 	<%} %>
 </body>
 </html>

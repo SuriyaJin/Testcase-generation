@@ -33,63 +33,49 @@ input:focus, textarea:focus {
 	background-size: 100% 2px, 100% 1px;
 	outline: none;
 }
-.center {
-    margin-top:50px;   
-}
 
-.modal-header {
-	padding-bottom: 5px;
+#successMessage{
+	margin-top:10%;
+	text-align: center;
+	font-family: monospace;
+	font-size:30px;
+	font-weight: 900px;
+	color:#58D68D;
 }
-
-.modal-footer {
-    	padding: 0;
-	}
-    
-.modal-footer .btn-group button {
-	height:40px;
-	border-top-left-radius : 0;
-	border-top-right-radius : 0;
-	border: none;
-	border-right: 1px solid #ddd;
+#text{
+ width:13%;
 }
-	
-.modal-footer .btn-group:last-child > button {
-	border-right: 0;
+#selectorValues{
+	width:15%;
+}
+#myModal{
+	position: absolute;
 }
 </style>
 </head>
 <body>
-<div class="modal fade" id="squarespaceModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-			<h3 class="modal-title" id="lineModalLabel">My Modal</h3>
-		</div>
-		<div class="modal-body">
-			<form>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-              </div>
-              <button type="submit" class="btn btn-outline btn-success">Update</button>
-            </form>
+	<div id="myModal" class="modal">
 
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<span class="close">&times;</span>
+				<h2>Edit</h2>
+			</div>
+			<div class="modal-body">
+				<div id="purchaseDetails"></div>
+			</div>
+			<div class="modal-footer">
+				<h6>Press update to make change.</h6>
+			</div>
 		</div>
-		<div class="modal-footer">
-		</div>
+
 	</div>
-  </div>
-</div>	
-	<div style="margin-top: 50px">
+	
+	<div style="margin-top: -60px">
 		<center>
-			<div class="container">
-				<div class="row"></div>
-				<div class="row-fluid">
+			<div class="row-fluid">
+				<div class="row col-sm-11 col-xs-11 col-md-11 col-lg-11">
 					<select name="By-options" id="By-options" class="selectpicker"
 						data-show-subtext="true" data-live-search="true">
 						<option data-subtext="  Perform with element id" value="Id">Id</option>
@@ -119,40 +105,42 @@ input:focus, textarea:focus {
 					<button id="show" onclick="show()" class="btn btn-warning">Show
 						Added</button>
 				</div>
-				<div id="Added cases" style="margin-top: 50px;"></div>
+				<div id="Added cases" style="margin-top:100px;"></div>
 			</div>
+		</center>
+		<center>
+			<div id="successMessage"></div>
+			<div id="downloadFile"></div>
 		</center>
 	</div>
 </body>
 <script>
-var modal = document.getElementById('squarespaceModal');
-
-var span = document.getElementsByClassName("close")[0];
-
-span.onclick = function() {
- modal.style.display = "none";
-}
-
-window.onclick = function(event) {
- if (event.target == modal) {
-     modal.style.display = "none";
-     
- }
-}
-
-		function edit(element)
-		{
-				var modal = document.getElementById('squarespaceModal');
-				var id = element.id;
-				var http = new XMLHttpRequest();
-				http.open("GET","edit.do?id="+id,true);
-				http.onreadystatechange = function() {
-	            if(http.readyState == 4 && http.status == 200) {
-	            	//document.getElementById('editTestCase').innerHTML = http.responseText;
-					modal.style.display = "block";
-	        	}
-	        }
-	        	http.send(null);	
+		var modal = document.getElementById('myModal');
+		
+		//Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+		
+		//When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = "none";
+			window.location.reload();
+		}
+		
+		function cancel() {
+			modal.style.display = "none";
+			window.location.reload();
+		}
+		
+		function edit(id) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("purchaseDetails").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET", "edit.do?id=" + id, true);
+			xhttp.send();
+			modal.style.display = "block";
 		}
 
         function visible(element) {
@@ -165,17 +153,19 @@ window.onclick = function(event) {
                 document.getElementById("text").style.visibility = "hidden";
             }
         }
+        
         function add() {
         	var http = new XMLHttpRequest();
-        	var url = "add.do";
+        	var url;
         	var selector = document.getElementById("By-options").value;
         	var selectorValue = document.getElementById("selectorValues").value;
         	var action = document.getElementById("operation").value;
         	var params = "selector="+selector+"&selectorValue="+selectorValue+"&action="+action;
-        	if(document.getElementById("text").style.visibility === "visible"){
-        		params += "&text="+document.getElementById("text").value;
-        		url = "addWithText.do";
-        	}
+       		if(document.getElementById("text").style.visibility === "visible"){
+           		params += "&text="+document.getElementById("text").value;
+           		url = "addWithText.do";
+           	}else
+           		url = "add.do";
         	http.open("POST", url, true);
         	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             http.onreadystatechange = function() {
@@ -184,6 +174,32 @@ window.onclick = function(event) {
         	    }
         	}
         	http.send(params); 
+        }
+        
+        function update() {
+        	modal.style.display = "none";
+    		var id = document.getElementById("hiddenField").value;
+    		var http = new XMLHttpRequest();
+    		var url = "update.do";
+    		var selector = document.getElementById("By-options").value;
+    		var selectorValue = document.getElementById("selectorValues").value;
+    		var action = document.getElementById("operation").value;
+    		var params = "id=" + id + "&selector=" + selector + "&selectorValue="
+    				+ selectorValue + "&action=" + action;
+    		if (document.getElementById("text").style.visibility === "visible") {
+    			params += "&text=" + document.getElementById("text").value;
+    			url = "updateWithText.do";
+    		}
+    		http.open("POST", url, true);
+    		http.setRequestHeader("Content-type",
+    				"application/x-www-form-urlencoded");
+    		http.onreadystatechange = function() {
+    			if (http.readyState == 4 && http.status == 200) {
+    				document.getElementById("Added cases").innerHTML = http.responseText;
+    			}
+    		}
+    		http.send(params);
+    		window.location.reload();
         }
         
         function show() {
@@ -196,8 +212,33 @@ window.onclick = function(event) {
         	}
         	http.send(null);
         }
-        function deleteCase(){
-        	alert("In delete");
+        
+        function deleteCase(id) {
+    		var r = confirm("Are you sure you want to delete it?(Cannot revert it again)");
+    		if (r == true) {
+    			var http = new XMLHttpRequest();
+    			var url = "delete.do";
+    			var params = "id=" + id;
+    			http.open("POST", url, true);
+    			http.setRequestHeader("Content-type",
+    					"application/x-www-form-urlencoded");
+    			http.onreadystatechange = function() {
+    				if (http.readyState == 4 && http.status == 200) {
+    					document.getElementById("Added cases").innerHTML = http.responseText;
+    				}
+    			}
+    			http.send(params);
+    		}
+    	}
+        
+        function generateTestCase(){
+        	var http = new XMLHttpRequest();
+        	http.open("GET","finish.do",true);
+        	http.onreadystatechange = function() {
+        		if(http.readyState == 4 && http.status == 200)
+        			document.getElementById("successMessage").innerHTML = http.responseText;
+        	}
+        	http.send(null);
         }
     </script>
 </html>
