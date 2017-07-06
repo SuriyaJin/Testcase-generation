@@ -51,6 +51,9 @@ input:focus, textarea:focus {
 #myModal{
 	position: absolute;
 }
+#Addedcases{
+	margin-top: 3%;
+}
 </style>
 </head>
 <body>
@@ -78,13 +81,13 @@ input:focus, textarea:focus {
 				<div class="row col-sm-11 col-xs-11 col-md-11 col-lg-11">
 					<select name="By-options" id="By-options" class="selectpicker"
 						data-show-subtext="true" data-live-search="true">
-						<option data-subtext="  Perform with element id" value="Id">Id</option>
-						<option data-subtext="  Perform with element name" value="Name">Name</option>
+						<option data-subtext="  Perform with element id" value="id">Id</option>
+						<option data-subtext="  Perform with element name" value="name">Name</option>
 						<option data-subtext="  Perform with css property"
-							value="Css Selector">Css Selector</option>
-						<option data-subtext="  Perform with element path" value="X-Path">X-Path</option>
-						<option data-subtext="  Perform with tag name" value="Tag">Tag</option>
-						<option data-subtext="Perform with class name" value="Class Name">Class Name</option>
+							value="cssSelector">Css Selector</option>
+						<option data-subtext="  Perform with element path" value="xpath">X-Path</option>
+						<option data-subtext="  Perform with tag name" value="tagName">Tag</option>
+						<option data-subtext="Perform with class name" value="className">Class Name</option>
 					</select> <input placeholder="Selector value" id="selectorValues"
 						type="text"> <select onchange="visible(this)"
 						style="width: 10px" name="operation" class="selectpicker"
@@ -105,7 +108,7 @@ input:focus, textarea:focus {
 					<button id="show" onclick="show()" class="btn btn-warning">Show
 						Added</button>
 				</div>
-				<div id="Added cases" style="margin-top:100px;"></div>
+				<div id="Addedcases" style="margin-top:100px;"></div>
 			</div>
 		</center>
 		<center>
@@ -170,7 +173,7 @@ input:focus, textarea:focus {
         	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
-        	        document.getElementById("Added cases").innerHTML = http.responseText;
+        	        document.getElementById("Addedcases").innerHTML = http.responseText;
         	    }
         	}
         	http.send(params); 

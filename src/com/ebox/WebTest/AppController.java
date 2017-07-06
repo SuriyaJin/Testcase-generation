@@ -20,7 +20,6 @@ public class AppController {
 	public ModelAndView index(HttpServletRequest request) {
 		if(request.getSession().getAttribute("testCaseList") == null)
 			request.getSession().setAttribute("testCaseList", new ArrayList<TestCase>());
-//		System.out.println(request);
 		return new ModelAndView("index");
 	}
 	

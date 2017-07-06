@@ -35,6 +35,10 @@ public class WebTestEngine {
 
 	public void generateTest() throws IOException {
 		totalCount = 0;
+		for(TestCase test:testCaseList){
+			if(!(test.getAction().equals("Click")) && !(test.getAction().equals("Send Keys")) && !(test.getAction().equals("Select Options")))
+				totalCount++;
+		}
 		testCase = new StringBuffer();
 		testCase.append("import java.io.File;" + System.getProperty("line.separator") +
                 "import java.util.concurrent.TimeUnit;" + System.getProperty("line.separator") +
@@ -44,6 +48,7 @@ public class WebTestEngine {
                 "import org.openqa.selenium.firefox.FirefoxBinary;" + System.getProperty("line.separator") +
                 "import org.openqa.selenium.firefox.FirefoxDriver;" + System.getProperty("line.separator") +
                 "import org.openqa.selenium.firefox.FirefoxProfile;" + System.getProperty("line.separator") +
+                "import org.openqa.selenium.support.ui.Select;" + System.getProperty("line.separator") +
                 "" + System.getProperty("line.separator") +
                 "public class WebTest {" + System.getProperty("line.separator") +
                 "  private WebDriver driver;" + System.getProperty("line.separator") +
@@ -51,7 +56,9 @@ public class WebTestEngine {
                 "  private boolean acceptNextAlert = true;" + System.getProperty("line.separator") +
                 "  private StringBuffer verificationErrors = new StringBuffer();" + System.getProperty("line.separator") +
                 "  public int passCount=0;" + System.getProperty("line.separator") +
+                "  public int totalCount="+totalCount+";" + System.getProperty("line.separator") +
                 "  public String text;" + System.getProperty("line.separator") +
+                "  public Select select" + System.getProperty("line.separator") +
                 "  @Before" + System.getProperty("line.separator") +
                 "  public void setUp() throws Exception {" + System.getProperty("line.separator") +
                 "	  File pathToBinary = new File(\"F:\\\\Firefox\\\\firefox.exe\");" + System.getProperty("line.separator") +
@@ -83,41 +90,88 @@ public class WebTestEngine {
 	
 	public static void beginGeneration() {
 		for(TestCase test : testCaseList){
-			switch(test.getSelector()) {
-				case "Id":generateBasedOnId(test);break;
-				case "Name":break;
-				case "Css Selector":break;
-				case "X-Path":break;
-				case "Tag":break;
-				case "Class Name":break;
+			switch(test.getAction()) {
+				case "Click":generateClick(test);break;
+				case "CheckTrue":generateCheckTrue(test);break;
+				case "CheckFalse":generateCheckFalse(test);break;
+				case "Send Keys":generateSendKeys(test);break;
+				case "Select Options":generateSelectOptions(test);break;
+				case "Verify Text":generateVerifyText(test);break;
+				case "Contains Text":generateContainsText(test);break;
 			}
-		}
-	}
-	
-	public static void generateBasedOnId(TestCase test) {
-		switch(test.getAction()) {
-			case "Click":generateClick(test);break;
-			case "CheckTrue":break;
-			case "CheckFalse":break;
-			case "Send Keys":break;
-			case "Select Options":break;
-			case "Verify Text":break;
-			case "Contains Text":break;
 		}
 	}
 	
 	public static void generateClick(TestCase test) {
 		testCase.append("try{" + System.getProperty("line.separator")
-					   +"driver.findElement(By.id(\""+test.getSelectorValue()+"\")).click();" + System.getProperty("line.separator")
+					   +"driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).click();" + System.getProperty("line.separator")
 					   +"}catch(Exception | Error e){" + System.getProperty("line.separator")
-					   +"verificationErrors.append(\"Element with id '"+test.getSelectorValue()+"' not found\\n\");" + System.getProperty("line.separator")
+					   +"verificationErrors.append(\"Element with "+test.getSelector()+" '"+test.getSelectorValue()+"' not found\\n\");" + System.getProperty("line.separator")
+					   +"}"+System.getProperty("line.separator"));
+	}
+	
+	public static void generateCheckTrue(TestCase test) {
+		testCase.append("try{" + System.getProperty("line.separator")
+					+ "assertTrue(isElementPresent(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")));" + System.getProperty("line.separator")
+					+ "passCount++;" + System.getProperty("line.separator")
+					+ "}catch(Exception | Error e){" + System.getProperty("line.separator")
+					+ "verificationErrors.append(\"Element with "+test.getSelector()+" '"+test.getSelectorValue()+"' not found\\n\");" + System.getProperty("line.separator")
+					+ "}"+System.getProperty("line.separator"));
+	}
+	
+	public static void generateCheckFalse(TestCase test) {
+		testCase.append("try{" + System.getProperty("line.separator")
+					+ "assertFalse(isElementPresent(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")));" + System.getProperty("line.separator")
+					+ "passCount++;" + System.getProperty("line.separator")
+					+ "}catch(Exception | Error e){" + System.getProperty("line.separator")
+					+ "verificationErrors.append(\"Element with "+test.getSelector()+" '"+test.getSelectorValue()+"' should not present\\n\");" + System.getProperty("line.separator")
+					+ "}"+System.getProperty("line.separator"));
+	}
+	
+	public static void generateSendKeys(TestCase test) {
+		testCase.append("try{" + System.getProperty("line.separator")
+					   +"driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).clear();" + System.getProperty("line.separator")
+					   +"driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).sendKeys(\""+test.getText()+"\");" + System.getProperty("line.separator")
+					   +"}catch(Exception | Error e){"+System.getProperty("line.separator") 
+					   +"verificationErrors.append(\"Element with "+test.getSelector()+" '"+test.getSelectorValue()+"' not found\");" + System.getProperty("line.separator")
+					   +"}"+System.getProperty("line.separator"));
+		
+	}
+	
+	public static void generateSelectOptions(TestCase test) {
+		testCase.append("try{" + System.getProperty("line.separator")
+		               +"select = new Select(driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")));" + System.getProperty("line.separator")
+		               +"select.selectByVisibleText(\""+test.getText()+"\");"+System.getProperty("line.separator")
+		               +"}catch(Exception | Error e){"+System.getProperty("line.separator")
+		               +"verificationErrors.append(\"Element with "+test.getSelector()+"'"+test.getSelectorValue()+"' not found\");"+System.getProperty("line.separator")
+		               +"}"+System.getProperty("line.separator"));
+	}
+	
+	public static void generateVerifyText(TestCase test) {
+		testCase.append("try{"+System.getProperty("line.separator")
+					   +"assertEquals(\""+test.getText()+"\",driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")));"+System.getProperty("line.separator")
+					   +"passCount++;"
+					   +"}catch(Exception | Error e){"+System.getProperty("line.separator")
+					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
+					   +"}"+System.getProperty("line.separator"));
+	}
+	
+	public static void generateContainsText(TestCase test) {
+		testCase.append("try{"+System.getProperty("line.separator")
+		               +"text = driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).getText();"
+		               +"if(text.contains(\""+test.getText()+"\"){"+System.getProperty("line.separator")
+		               +"passCount++;"+System.getProperty("line.separator")
+		               +"}else{"+System.getProperty("line.separator")
+		               +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
+		               +"}"+System.getProperty("line.separator")
+		               +"}catch(Exception | Error e){"+System.getProperty("line.separator")
+					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
 					   +"}"+System.getProperty("line.separator"));
 	}
 	
 	public static void onFinish() {
 		testCase.append("}" + System.getProperty("line.separator") +
                 "\n" + System.getProperty("line.separator") +
-                "  public int totalCount="+totalCount+";" + System.getProperty("line.separator") +
                 "  @After" + System.getProperty("line.separator") +
                 "  public void tearDown() throws Exception {" + System.getProperty("line.separator") +
                 "  System.out.println(\"#\"+Math.round((passCount/(float)totalCount)*100));" + System.getProperty("line.separator") +
