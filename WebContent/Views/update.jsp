@@ -106,13 +106,13 @@ label:before {
 			<div class="row-fluid">
 				<select name="By-options" id="By-options" class="selectpicker"
 					data-show-subtext="true" data-live-search="true">
-					<option data-subtext="  Perform with element id" value="Id">Id</option>
-					<option data-subtext="  Perform with element name" value="Name">Name</option>
+					<option data-subtext="  Perform with element id" value="id">Id</option>
+					<option data-subtext="  Perform with element name" value="name">Name</option>
 					<option data-subtext="  Perform with css property"
-						value="Css Selector">Css Selector</option>
-					<option data-subtext="  Perform with element path" value="X-Path">X-Path</option>
-					<option data-subtext="  Perform with tag name" value="Tag">Tag</option>
-					<option data-subtext="Perform with class name" value="Class Name">Class
+						value="cssSelector">Css Selector</option>
+					<option data-subtext="  Perform with element path" value="xpath">X-Path</option>
+					<option data-subtext="  Perform with tag name" value="tagName">Tag</option>
+					<option data-subtext="Perform with class name" value="className">Class
 						Name</option>
 				</select> <input  id="selectorValues" type="text" value = <%=testCase.getSelectorValue() %>>
 				<select onchange="visible(this)" 

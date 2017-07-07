@@ -51,12 +51,9 @@ input:focus, textarea:focus {
 #myModal{
 	position: absolute;
 }
-#Addedcases{
-	margin-top: 3%;
-}
 </style>
 </head>
-<body>
+<body onload="show()">
 	<div id="myModal" class="modal">
 
 		<!-- Modal content -->
@@ -105,10 +102,8 @@ input:focus, textarea:focus {
 					</select> <input id="text" style="visibility: hidden" placeholder="Text"
 						type="text">
 					<button onclick="add()" class="btn btn-info">Add</button>
-					<button id="show" onclick="show()" class="btn btn-warning">Show
-						Added</button>
 				</div>
-				<div id="Addedcases" style="margin-top:100px;"></div>
+					<div id="Addedcases"style="margin-top: 10%;"></div>
 			</div>
 		</center>
 		<center>
@@ -118,6 +113,17 @@ input:focus, textarea:focus {
 	</div>
 </body>
 <script>
+		window.onload = function() {
+			var http = new XMLHttpRequest();
+			http.open("GET", "show.do", true);
+		    http.onreadystatechange = function() {
+		    if(http.readyState == 4 && http.status == 200) {
+			        document.getElementById("Addedcases").innerHTML = http.responseText;
+			    }
+			}
+			http.send(null);
+		}
+		
 		var modal = document.getElementById('myModal');
 		
 		//Get the <span> element that closes the modal
@@ -204,18 +210,7 @@ input:focus, textarea:focus {
     		http.send(params);
     		window.location.reload();
         }
-        
-        function show() {
-        	var http = new XMLHttpRequest();
-        	http.open("GET", "show.do", true);
-            http.onreadystatechange = function() {
-            if(http.readyState == 4 && http.status == 200) {
-        	        document.getElementById("Added cases").innerHTML = http.responseText;
-        	    }
-        	}
-        	http.send(null);
-        }
-        
+         
         function deleteCase(id) {
     		var r = confirm("Are you sure you want to delete it?(Cannot revert it again)");
     		if (r == true) {

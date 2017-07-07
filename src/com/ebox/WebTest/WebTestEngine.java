@@ -58,16 +58,17 @@ public class WebTestEngine {
                 "  public int passCount=0;" + System.getProperty("line.separator") +
                 "  public int totalCount="+totalCount+";" + System.getProperty("line.separator") +
                 "  public String text;" + System.getProperty("line.separator") +
-                "  public Select select" + System.getProperty("line.separator") +
-                "  @Before" + System.getProperty("line.separator") +
+                "  public Select select;" + System.getProperty("line.separator") +
+                "  @Before" +System.getProperty("line.separator") +
                 "  public void setUp() throws Exception {" + System.getProperty("line.separator") +
-                "	  File pathToBinary = new File(\"F:\\\\Firefox\\\\firefox.exe\");" + System.getProperty("line.separator") +
-                "	  FirefoxBinary ffBinary = new FirefoxBinary(pathToBinary);" + System.getProperty("line.separator") +
-                "	  FirefoxProfile firefoxProfile = new FirefoxProfile();" + System.getProperty("line.separator") +
-                "	  driver = new FirefoxDriver(ffBinary,firefoxProfile);" + System.getProperty("line.separator") +
-                "	  baseUrl = \"#BASE_URL#\";" + System.getProperty("line.separator") +
-                "	  driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);" + System.getProperty("line.separator") +
-                "  }" + System.getProperty("line.separator") +
+                "  String Xport = System.getProperty(\"lmportal.xvfb.id\", \":20\");" + System.getProperty("line.separator") +
+                "  final File firefoxPath = new File(System.getProperty(\"lmportal.deploy.firefox.path\", \"/usr/bin/firefox\"));"+ System.getProperty("line.separator")+
+                "  FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxPath);"+System.getProperty("line.separator") +
+                "  firefoxBinary.setEnvironmentProperty(\"DISPLAY\", Xport);"+System.getProperty("line.separator")+
+                "  driver = new FirefoxDriver();" + System.getProperty("line.separator") + 
+                "  baseUrl = \"#BASE_URL#\";" + System.getProperty("line.separator") +
+                "  driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);" + System.getProperty("line.separator") +
+                "}" + System.getProperty("line.separator") +
                 "" + System.getProperty("line.separator") +
                 "  @Test" + System.getProperty("line.separator") +
                 "  public void testWeb() throws Exception {" + System.getProperty("line.separator") +
@@ -150,16 +151,16 @@ public class WebTestEngine {
 	public static void generateVerifyText(TestCase test) {
 		testCase.append("try{"+System.getProperty("line.separator")
 					   +"assertEquals(\""+test.getText()+"\",driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")));"+System.getProperty("line.separator")
-					   +"passCount++;"
+					   +"passCount++;"+System.getProperty("line.separator")
 					   +"}catch(Exception | Error e){"+System.getProperty("line.separator")
-					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
+					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\");"+System.getProperty("line.separator")
 					   +"}"+System.getProperty("line.separator"));
 	}
 	
 	public static void generateContainsText(TestCase test) {
 		testCase.append("try{"+System.getProperty("line.separator")
-		               +"text = driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).getText();"
-		               +"if(text.contains(\""+test.getText()+"\"){"+System.getProperty("line.separator")
+		               +"text = driver.findElement(By."+test.getSelector()+"(\""+test.getSelectorValue()+"\")).getText();"+System.getProperty("line.separator")
+		               +"if(text.contains(\""+test.getText()+"\")){"+System.getProperty("line.separator")
 		               +"passCount++;"+System.getProperty("line.separator")
 		               +"}else{"+System.getProperty("line.separator")
 		               +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")

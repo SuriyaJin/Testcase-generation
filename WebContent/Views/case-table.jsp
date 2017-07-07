@@ -63,10 +63,12 @@
 .panel-table .panel-body .table-bordered>tbody>tr>td {
 	line-height: 34px;
 }
+#testTable{
+	width:100%;
+}
 </style>
 </head>
 <body>
-
 	<%
             List<TestCase> testCaseList = (List<TestCase>) request.getSession().getAttribute("testCaseList");
         %>
