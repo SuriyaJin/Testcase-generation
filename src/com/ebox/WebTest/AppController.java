@@ -63,8 +63,9 @@ public class AppController {
 		@SuppressWarnings("unchecked")
 		List<TestCase> testCaseList = (List<TestCase>)request.getSession().getAttribute("testCaseList");
 		for(TestCase testCase : testCaseList)
-			if(testCase.getId().equals(id))
+			if(testCase.getId().equals(id)) {
 				return new ModelAndView("update","testCase",testCase);
+			}
 		return null;
 	}
 	

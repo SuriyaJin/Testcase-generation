@@ -195,7 +195,7 @@ input:focus, textarea:focus {
     		var action = document.getElementById("operation").value;
     		var params = "id=" + id + "&selector=" + selector + "&selectorValue="
     				+ selectorValue + "&action=" + action;
-    		if (document.getElementById("text").style.visibility === "visible") {
+    		if (action ==="Verify Text" || action === "Send Keys" || action === "Select Options" || action === "Contains Text") {
     			params += "&text=" + document.getElementById("text").value;
     			url = "updateWithText.do";
     		}

@@ -96,7 +96,9 @@ label:before {
     display:block;
 }
 
-
+#text{
+	visibility:"hidden";
+}
 
 </style>
 
@@ -157,7 +159,7 @@ label:before {
 						<%} %>
 					
 				</select>
-				<input  placeholder="Text" id="text" type="text" value = <%=testCase.getText() %>>
+				<input  placeholder="Text" id="text" name="text" type="text" value = "<%=testCase.getText()%>"/>
 				<input type = "hidden" id = "hiddenField" value="<%=testCase.getId() %>"/>
 				<button onclick="update()" class="btn btn-info">Update</button>
 				<button onclick="cancel()" class="btn btn-danger">cancel</button>

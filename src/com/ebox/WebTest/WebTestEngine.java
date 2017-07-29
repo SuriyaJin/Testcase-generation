@@ -163,10 +163,10 @@ public class WebTestEngine {
 		               +"if(text.contains(\""+test.getText()+"\")){"+System.getProperty("line.separator")
 		               +"passCount++;"+System.getProperty("line.separator")
 		               +"}else{"+System.getProperty("line.separator")
-		               +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
+		               +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\");"+System.getProperty("line.separator")
 		               +"}"+System.getProperty("line.separator")
 		               +"}catch(Exception | Error e){"+System.getProperty("line.separator")
-					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\")"+System.getProperty("line.separator")
+					   +"verificationErrors.append(\"Text '"+test.getText()+"' not found on element with "+test.getSelector()+"'"+test.getSelectorValue()+"'\");"+System.getProperty("line.separator")
 					   +"}"+System.getProperty("line.separator"));
 	}
 	
